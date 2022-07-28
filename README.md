@@ -7,6 +7,7 @@ Deploying magma orchestrator using ansible playbook(script).
 1. Install [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/installation_distros.html#installing-ansible-on-ubuntu).
 
 ```bash
+sudo apt remove ansible
 sudo apt update
 sudo apt install software-properties-common
 sudo add-apt-repository --yes --update ppa:ansible/ansible
@@ -36,16 +37,16 @@ ssh ubuntu@192.168.5.192
 2. Then on the other terminal, copy the public key to remote-host using `ssh-copy-id` command.
 
 ```bash
+ssh-keygen -R 192.168.5.192
 ssh-copy-id ubuntu@192.168.5.192
 ```
-
-- `ssh-copy-id` installs an SSH key on the VM as an authorized key. Its purpose is to provision access without requiring a password for each login. This will facilitates automated, passwordless logins and single sign-on using the SSH protocol.
+- `ssh-keygen` can create keys for use by SSH protocol. `ssh-copy-id` installs an SSH key on the VM as an authorized key. Its purpose is to provision access without requiring a password for each login. This will facilitates automated, passwordless logins and single sign-on using the SSH protocol.
 
 - You can check this by login again to the VM. This time, no password is required while login.
 
 ### Clone Repository & Update Values
 
-Clone [this](https://github.com/ShubhamTatvamasi/magma-galaxy) repository in your local system.
+Clone [ShubhamTatvamasi/magma-galaxy](https://github.com/ShubhamTatvamasi/magma-galaxy) repository in your local system.
 
 Update `hosts` field with the VM's IP address and change the `orc8r_domain` name with your orc8r name in `hosts.yml`.
 
@@ -89,9 +90,9 @@ to <br>
 `192.168.5.185 master.nms.galaxy.shubhamaditya.com` <br>
 `192.168.5.185 magma-test.nms.galaxy.shubhamaditya.com`
 
-![image](https://user-images.githubusercontent.com/97805339/181390182-36b44e9d-674d-401d-bcad-0e9fa73ea315.png)
-
 Explaination of this step is [here](https://docs.magmacore.org/docs/nms/deploy_config).
+
+![image](https://user-images.githubusercontent.com/97805339/181390182-36b44e9d-674d-401d-bcad-0e9fa73ea315.png)
 
 ### Create New User
 
