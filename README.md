@@ -75,7 +75,7 @@ After deployment is done, DNS Values will appear at the end.
 
 ![image](https://user-images.githubusercontent.com/97805339/181389335-a325222c-7bfb-4540-a886-8e33eac716ea.png)
 
-Copy the message part and append it in the `/etc/hosts`.
+Copy the message part and append it at the end of `/etc/hosts`.
 
 ```bash
 cd
@@ -113,7 +113,7 @@ kubectl -n orc8r exec -it ${NMS_POD} -- yarn setAdminPassword master admin admin
 
 ### Login:
 
-Login to the NMS through URL,
+Login to the NMS through URL:
 
 magma-test.nms.yourdomain.com <br>
 master.nms.yourdomain.com <br>
