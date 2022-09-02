@@ -1,13 +1,16 @@
+
 # Deploy Magma Orchestrator
 
-Deploying magma orchestrator using ansible playbook(script).
-
+Deploying magma orchestrator using ansible playbook.
 ## Prerequisite
+
+> **Note**:  All the work to be done on local system.
+
 
 1. Install [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/installation_distros.html#installing-ansible-on-ubuntu).
 
 ```bash
-sudo apt remove ansible
+sudo apt purge ansible
 sudo apt update
 sudo apt install software-properties-common
 sudo add-apt-repository --yes --update ppa:ansible/ansible
@@ -20,35 +23,44 @@ sudo apt install ansible -y
 ansible-galaxy collection install shubhamtatvamasi.magma
 ```
 
-3. It is recommended to deploy the orc8r in a new VM so that it won't interfere with the installed applications in your system.
+> **Note**:  Now here it is recommended to deploy the orc8r in a new VM so that it won't interfere with the installed applications in your system. So create a fresh VM and you are good to go.
 
 ## Installation
 
 ### Copy SSH Key
 
-1. Login to the VM.
+1. Login to your VM using following command:
 
 ```bash
-ssh ubuntu@192.168.5.192
+ssh <user_name>@<VM's IP>
 ```
+`
+For example:
+ssh ubuntu@192.168.5.192
+`
 
-- This will add `192.168.5.192` to the list of known hosts.
+- *In my case I am considering my VM's IP as **`192.168.5.192`**  and username as **`ubuntu`**.
+So make sure that you modify it according to your VM*.
 
-2. Then on the other terminal, copy the public key to remote-host using `ssh-copy-id` command.
+- This will add `Your VM's IP address` to the list of known hosts.
+
+2. Then on the other terminal (on local system), copy the public key to remote-host using `ssh-copy-id` command.
 
 ```bash
 ssh-keygen -R 192.168.5.192
 ssh-copy-id ubuntu@192.168.5.192
 ```
-- `ssh-keygen` can create keys for use by SSH protocol. `ssh-copy-id` installs an SSH key on the VM as an authorized key. Its purpose is to provision access without requiring a password for each login. This will facilitates automated, passwordless logins and single sign-on using the SSH protocol.
+- `ssh-keygen` can create keys for use by SSH protocol.
+-  `ssh-copy-id` installs an SSH key on the VM as an authorized key. Its purpose is to provision access without requiring a password for each login. This will facilitates automated, passwordless logins and single sign-on using the SSH protocol.
 
 - You can check this by login again to the VM. This time, no password is required while login.
 
 ### Clone Repository & Update Values
+- *Run the following commands on local system.*
 
-Clone [ShubhamTatvamasi/magma-galaxy](https://github.com/ShubhamTatvamasi/magma-galaxy) repository in your local system.
-
-Update `hosts` field with the VM's IP address and change the `orc8r_domain` name with your orc8r name in `hosts.yml`.
+- Clone [ShubhamTatvamasi/magma-galaxy](https://github.com/ShubhamTatvamasi/magma-galaxy) repository in your local system.
+- Now change your directory to the cloned folder.
+- Update `hosts` field with your VM's IP address and change the `orc8r_domain` name with your orc8r name in `hosts.yml` file.
 
 ```bash
 git clone https://github.com/ShubhamTatvamasi/magma-galaxy.git
@@ -56,19 +68,21 @@ cd magma-galaxy/
 vim hosts.yml
 ```
 
-Uncomment the commented part if deploying in AWS.
+Uncomment the commented part if deploying in AWS else leave it as it is.
 
 ![image](https://user-images.githubusercontent.com/97805339/181386376-e1fe1ea8-a345-4f72-8c2b-27712dad0428.png)
 
 ### Deploy Magma Orc8r
 
-`ansible-playbook` is a list of tasks that automatically execute against all the hosts that are included in the ansible inventory.
+- `ansible-playbook` is a list of tasks that automatically execute against all the hosts that are included in the ansible inventory.
 
 ```bash
 ansible-playbook deploy-orc8r.yml
 ```
 
-> Note: Deployment takes 10-20 min and apart from this, it needs extra 5-10 min to start all the magma services. You can check if the pods are running or not by login into your VM and run this command `kubectl get pods -A`.
+> **Note**:  
+> - Run the following command inside your cloned directory on local system.
+> - Deployment takes 10-20 min and apart from this, it needs extra 5-10 min to start all the magma services. You can check if the pods are running or not by login into your VM and run this command `kubectl get pods -A`.
 
 ### Update DNS Values
 
@@ -98,7 +112,7 @@ Explaination of this step is [here](https://docs.magmacore.org/docs/nms/deploy_c
 
 When we deploy the NMS for the first time, we need to create a new user that has access to the master and magma-test organization.
 
-> Note: Run the below command in the VM.
+> **Note**:  Run the below command in the VM.
 
 ```bash
 ORC_POD=$(kubectl -n orc8r get pod -l app.kubernetes.io/component=orchestrator -o jsonpath='{.items[0].metadata.name}')
@@ -116,14 +130,16 @@ kubectl -n orc8r exec -it ${NMS_POD} -- yarn setAdminPassword master admin admin
 
 Login to the NMS through URL:
 
-magma-test.nms.yourdomain.com <br>
-master.nms.yourdomain.com <br>
+- magma-test.nms.`<yourdomain>`.com 
+- master.nms.`<yourdomain>`.com 
 
 e.g.
-https://master.nms.galaxy.shubhamkumar89.com, <br>
-https://magma-test.nms.galaxy.shubhamkumar89.com
+- https://master.nms.galaxy.shubhamkumar89.com, 
+- https://magma-test.nms.galaxy.shubhamkumar89.com
 
-<b> Email: admin<br>
-Password: admin<b>
+####  Default credentials to login:
+> Email: admin
+> 
+> Password: admin<b>
 
 ![image](https://user-images.githubusercontent.com/97805339/181392698-f0440338-6484-4e93-b85b-7a4b8259255a.png)
