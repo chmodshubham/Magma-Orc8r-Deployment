@@ -7,7 +7,7 @@ Deploying magma orchestrator using ansible playbook(script).
 1. Install [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/installation_distros.html#installing-ansible-on-ubuntu).
 
 ```bash
-sudo apt remove ansible
+sudo apt purge ansible
 sudo apt update
 sudo apt install software-properties-common
 sudo add-apt-repository --yes --update ppa:ansible/ansible
